@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filmes</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js "></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    Pesquisar Filmes
+    <input type="text" id="caixaPesquisa">
+    <button id="bntPesquisar">Pesquisar</button><br>
+    <div id="conteudo"></div>
+
+    <script>
+
+        $("#bntPesquisar").click(function () {
+            var filme_pesquisar = $("#caixaPesquisa").val();
+            const settings = {
+                async: true,
+                crossDomain: true,
+                url: 'https://imdb146.p.rapidapi.com/v1/find/?query='+filme_pesquisar,
+                method: 'GET',
+                headers: {
+                    'x-rapidapi-key': 'e974f4594fmshd93b1a87c26ad21p1285bfjsnc40e04825e00',
+                    'x-rapidapi-host': 'imdb146.p.rapidapi.com'
+                }
+            };
+
+            $.ajax(settings).done(function (resposta) {
+                if(resposta.titleResults.results.length > 0){
+                    var qtd = resposta.titleResults.results.length;
+                    $("#conteudo").html(qtd +"Filme encontrado!!");
+                    resposta.titleResults.results.forEach(item => {
+                        var cthtml = "";
+                        cthtml += `
+                        <div class="filmes">
+                            <h1>${item.titleNameText}</h1>
+                            <img src='${item.titlePosterImageModel.url}' height='400'><br>
+                            <a href='https://embedder.net/e/${item.id}' target='_blank'>Assistir</a>
+                        </div>
+                            `;
+
+                        $("#conteudo").append(cthtml);
+                    });
+                }else{
+                    $("#conteudo").html("Não encontrado!!");
+                }    
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>
